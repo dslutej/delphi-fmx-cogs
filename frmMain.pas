@@ -75,11 +75,13 @@ begin
 
   if FVirgin then
   begin
+    FVirgin := False;
     elapsed := TTimeSpan.Create(0,0,0,0,10);
   end
   else begin
     FStopWatch.Stop;
     elapsed := FStopWatch.Elapsed;
+    FStopWatch.Reset;
   end;
   FStopWatch.Start;
 
