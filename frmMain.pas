@@ -29,9 +29,11 @@ type
     actClose: TAction;
     rectShadow: TRectangle;
     rectCog: TRectangle;
+    Timer1: TTimer;
     procedure actCloseExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormPaint(Sender: TObject; Canvas: TCanvas; const ARect: TRectF);
+    procedure Timer1Timer(Sender: TObject);
   private
     FCogs: array of TPointMass;
     FStopWatch: TStopwatch;
@@ -91,25 +93,25 @@ begin
 
   mousePosition := ScreenToClient(Screen.MousePos)-PointF(128,128);
 
-  strength := 100;
+  strength := 50;
   offset := 32;
 
   for pointMass in FCogs do
   begin
     // newton is in da house
     pointMass.FForce          := -(pointMass.FPositon - mousePosition)*20;
-    pointMass.FPositon        := pointMass.FPositon + pointMass.FVelocity*dt*strength;
-    pointMass.FVelocity       := pointMass.FVelocity *0.75 +pointMass.FAcceleration*dt;
-    pointMass.FAcceleration   := pointMass.FAcceleration * 0.9 + pointMass.FForce*dt;
+    pointMass.FPositon        := pointMass.FPositon               + pointMass.FVelocity*dt*strength;
+    pointMass.FVelocity       := pointMass.FVelocity * 0.75       + pointMass.FAcceleration*dt;
+    pointMass.FAcceleration   := pointMass.FAcceleration * 0.75   + pointMass.FForce*dt;
 
     pointMass.FImage.Position.Point   := pointMass.FPositon;
     pointMass.FShadow.Position.Point  := pointMass.FPositon + PointF(offset,offset);
 
-    pointMass.FImage.RotationAngle    := pointMass.FImage.RotationAngle + dt*10;
-    pointMass.FShadow.RotationAngle   := pointMass.FShadow.RotationAngle + dt*10;
+    pointMass.FImage.RotationAngle    := pointMass.FImage.RotationAngle + dt*40;
+    pointMass.FShadow.RotationAngle   := pointMass.FShadow.RotationAngle + dt*40;
 
 
-    strength := strength * 0.75 + 10;
+    strength := strength * 0.9;
     offset := offset - 32*(0.9/Length(FCogs));
 
     mousePosition := pointMass.FPositon;
@@ -178,7 +180,12 @@ end;
 procedure TForm10.FormPaint(Sender: TObject; Canvas: TCanvas;
   const ARect: TRectF);
 begin
-  Application.ProcessMessages;
+//  Application.ProcessMessages;
+//  CadenceCogs;
+end;
+
+procedure TForm10.Timer1Timer(Sender: TObject);
+begin
   CadenceCogs;
 end;
 
